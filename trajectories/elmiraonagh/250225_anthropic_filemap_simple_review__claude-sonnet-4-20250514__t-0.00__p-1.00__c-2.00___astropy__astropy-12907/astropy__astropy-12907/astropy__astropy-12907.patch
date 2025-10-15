@@ -1,0 +1,44 @@
+diff --git a/astropy/modeling/separable.py b/astropy/modeling/separable.py
+index e180603..36e6fdb 100644
+--- a/astropy/modeling/separable.py
++++ b/astropy/modeling/separable.py
+@@ -232,12 +232,24 @@ def _cstack(left, right):
+     noutp = _compute_n_outputs(left, right)
+ 
+     if isinstance(left, Model):
+-        cleft = _coord_matrix(left, "left", noutp)
++        if isinstance(left, CompoundModel):
++            # For CompoundModel, use _separable to get the correct separability matrix
++            cleft_sep = _separable(left)
++            cleft = np.zeros((noutp, cleft_sep.shape[1]))
++            cleft[: cleft_sep.shape[0], : cleft_sep.shape[1]] = cleft_sep
++        else:
++            cleft = _coord_matrix(left, "left", noutp)
+     else:
+         cleft = np.zeros((noutp, left.shape[1]))
+         cleft[: left.shape[0], : left.shape[1]] = left
+     if isinstance(right, Model):
+-        cright = _coord_matrix(right, "right", noutp)
++        if isinstance(right, CompoundModel):
++            # For CompoundModel, use _separable to get the correct separability matrix
++            cright_sep = _separable(right)
++            cright = np.zeros((noutp, cright_sep.shape[1]))
++            cright[-cright_sep.shape[0] :, -cright_sep.shape[1] :] = cright_sep
++        else:
++            cright = _coord_matrix(right, "right", noutp)
+     else:
+         cright = np.zeros((noutp, right.shape[1]))
+         cright[-right.shape[0] :, -right.shape[1] :] = right
+@@ -266,7 +278,11 @@ def _cdot(left, right):
+         Return ``n_inputs``, ``n_outputs`` for a model or coord_matrix.
+         """
+         if isinstance(input, Model):
+-            coords = _coord_matrix(input, position, input.n_outputs)
++            if isinstance(input, CompoundModel):
++                # For CompoundModel, use _separable to get the correct separability matrix
++                coords = _separable(input)
++            else:
++                coords = _coord_matrix(input, position, input.n_outputs)
+         else:
+             coords = input
+         return coords

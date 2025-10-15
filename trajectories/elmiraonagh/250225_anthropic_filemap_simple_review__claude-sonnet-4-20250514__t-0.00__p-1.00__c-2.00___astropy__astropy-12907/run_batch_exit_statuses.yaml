@@ -1,0 +1,4 @@
+instances_by_exit_status:
+    submitted:
+    - astropy__astropy-12907
+total_cost: 1.1912953500000003

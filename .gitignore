@@ -208,3 +208,7 @@ website/frontend/build
 agent_conf
 sb-cli-reports/
 trajectories_sft/
+
+
+!trajectories/elmiraonagh/
+!trajectories/elmiraonagh/**

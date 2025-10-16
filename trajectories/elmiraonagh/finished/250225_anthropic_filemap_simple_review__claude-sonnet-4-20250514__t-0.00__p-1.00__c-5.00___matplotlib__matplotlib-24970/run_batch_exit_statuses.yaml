@@ -1,0 +1,4 @@
+instances_by_exit_status:
+    exit_cost:
+    - matplotlib__matplotlib-24970
+total_cost: 3.1998266999999996

@@ -1,0 +1,7 @@
+{
+    "pytest-dev__pytest-7432": {
+        "model_name_or_path": "250225_anthropic_filemap_simple_review__claude-sonnet-4-20250514__t-0.00__p-1.00__c-5.00___pytest-dev__pytest-7432",
+        "instance_id": "pytest-dev__pytest-7432",
+        "model_patch": "diff --git a/src/_pytest/skipping.py b/src/_pytest/skipping.py\nindex 6ba30c457..090a62944 100644\n--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -273,8 +273,12 @@ def pytest_runtest_makereport(\n ) -> Generator[None, TestReport, TestReport]:\n     rep = yield\n     xfailed = item.stash.get(xfailed_key, None)\n-    if item.config.option.runxfail:\n-        pass  # don't interfere\n+    # Handle skip exceptions normally, regardless of --runxfail\n+    if call.excinfo and isinstance(call.excinfo.value, skip.Exception):\n+        # Skip exceptions should always be handled the same way\n+        pass  # Let the normal skip exception handling work\n+    elif item.config.option.runxfail:\n+        pass  # don't interfere with xfail processing\n     elif call.excinfo and isinstance(call.excinfo.value, xfail.Exception):\n         assert call.excinfo.value.msg is not None\n         rep.wasxfail = call.excinfo.value.msg\n"
+    }
+}

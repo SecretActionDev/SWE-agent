@@ -1,0 +1,4 @@
+instances_by_exit_status:
+    exit_cost:
+    - sympy__sympy-12419
+total_cost: 3.4529511000000004

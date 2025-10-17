@@ -1,0 +1,19 @@
+diff --git a/src/_pytest/skipping.py b/src/_pytest/skipping.py
+index 6ba30c457..090a62944 100644
+--- a/src/_pytest/skipping.py
++++ b/src/_pytest/skipping.py
+@@ -273,8 +273,12 @@ def pytest_runtest_makereport(
+ ) -> Generator[None, TestReport, TestReport]:
+     rep = yield
+     xfailed = item.stash.get(xfailed_key, None)
+-    if item.config.option.runxfail:
+-        pass  # don't interfere
++    # Handle skip exceptions normally, regardless of --runxfail
++    if call.excinfo and isinstance(call.excinfo.value, skip.Exception):
++        # Skip exceptions should always be handled the same way
++        pass  # Let the normal skip exception handling work
++    elif item.config.option.runxfail:
++        pass  # don't interfere with xfail processing
+     elif call.excinfo and isinstance(call.excinfo.value, xfail.Exception):
+         assert call.excinfo.value.msg is not None
+         rep.wasxfail = call.excinfo.value.msg

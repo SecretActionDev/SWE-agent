@@ -1,0 +1,4 @@
+instances_by_exit_status:
+    submitted:
+    - pytest-dev__pytest-7432
+total_cost: 1.8537198000000004
